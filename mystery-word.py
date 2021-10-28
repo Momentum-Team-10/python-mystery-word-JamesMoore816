@@ -6,6 +6,9 @@ def initialize_game():
     # Boolean flag for starting/stopping the game
     global playing_game
     playing_game = True
+    # Boolean flag for winning the game
+    global win_flag
+    win_flag = False
     # List for storing letters that have been guessed
     global letters_graveyard
     letters_graveyard = []
@@ -48,10 +51,15 @@ def guess_letter(letter):
             if char == letter:
                 mystery_word_blank[index] = letter
     else:
-        letters_graveyard.append(letter)
-        global guesses_remaining
-        guesses_remaining -= 1
+        if letter not in letters_graveyard:
+            letters_graveyard.append(letter)
+            global guesses_remaining
+            guesses_remaining -= 1
     display()
+    if (mystery_word_blank == list(mystery_word)):
+        print("Congratulations--you win!")
+        global win_flag
+        win_flag = True
 
 
 
@@ -72,7 +80,8 @@ def initial_display():
 def display():
     print("")
     print(' '.join(mystery_word_blank))
-    print(f"You have already guessed: {' '.join(letters_graveyard)}")
+    if len(letters_graveyard) > 0:
+        print(f"You have already guessed: {' '.join(letters_graveyard)}")
     print(f"You have {guesses_remaining} guesses remaining")
     print("")
 
@@ -93,8 +102,10 @@ def prompt_to_continue():
 def play_game():
     initialize_game()
     initial_display()
-    while guesses_remaining > 0:
+    while guesses_remaining > 0 and win_flag == False:
         prompt_guess()
+    if guesses_remaining == 0:
+        print(f"You lose! Your mystery word was: {mystery_word}")
 
 def main():
     play_game()
