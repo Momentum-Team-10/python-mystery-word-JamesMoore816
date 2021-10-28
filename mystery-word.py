@@ -28,15 +28,6 @@ def initialize_game():
     for char in mystery_word_as_list:
         mystery_word_blank.append("_")
 
-    # if 'A' in mystery_word_as_list:
-    #     for index, char in enumerate(mystery_word_as_list):
-    #         if char == 'A':
-    #             mystery_word_blank[index] = 'A'
-
-    # print(list(enumerate(mystery_word_as_list))[0])
-    # print(' '.join(mystery_word_as_list))
-    # print(' '.join(mystery_word_blank))
-
 def choose_mystery_word():
     """This function returns a random word from text file and
     makes all letters uppercase."""
@@ -46,6 +37,12 @@ def choose_mystery_word():
         return random.choice(word_bank_list)
 
 def guess_letter(letter):
+    """This function checks the letter given as an argument to see
+    if it is present in the mystery word. If it is, the enumerated list
+    version of mystery word provides all indeces of that letter and uses
+    those indeces to replace the underscores in the mystery word with
+    its respective letter. If the letter is not in the word, it is added
+    to the letter graveyard, and the remaining guesses are decremented."""
     if letter in mystery_word_as_list:
         for index, char in enumerate(mystery_word_as_list):
             if char == letter:
@@ -62,8 +59,10 @@ def guess_letter(letter):
         win_flag = True
 
 
-
 def prompt_guess():
+    """This function takes a user input only if it is a letter, then
+    converts that letter to uppercase. If the input is successful, it
+    then uses that letter as an argument for the guess_letter function"""
     guessed_letter = input("Please guess a letter: ").upper()
     if guessed_letter in string.ascii_uppercase:
         guess_letter(guessed_letter)
@@ -97,8 +96,6 @@ def prompt_to_continue():
         print(player_input)
         print("Please respond with \'YES\' or \'NO\'")
 
-
-
 def play_game():
     initialize_game()
     initial_display()
@@ -111,5 +108,7 @@ def main():
     play_game()
     while playing_game == True:
         prompt_to_continue()
+    print("")
+    print("Thank you for playing!")
 
 main()
