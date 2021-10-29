@@ -3,6 +3,7 @@ import string
 
 def initialize_game():
     """This function initializes all game variables."""
+    print("\nWelcome to the mystery word game!\n")
     # Boolean flag for starting/stopping the game
     global playing_game
     playing_game = True
@@ -15,9 +16,24 @@ def initialize_game():
     # Int for storing number of guesses remaining
     global guesses_remaining
     guesses_remaining = 8
-    # String for storing the random mystery word
+    # String for storing the random mystery word, set to empty
+    # so it meet the conditional when a difficulty setting is chosen
     global mystery_word
-    mystery_word = choose_mystery_word()
+    mystery_word = ''
+    # A string to store the difficulty setting, set by the user when
+    # prompted
+    difficulty_setting = prompt_for_difficulty()
+    if difficulty_setting == 'EASY':
+        while len(mystery_word) >= 6 or len(mystery_word) <= 4:
+            mystery_word = choose_mystery_word()
+    if difficulty_setting == 'NORMAL':
+        while len(mystery_word) >= 8 or len(mystery_word) <= 6:
+            mystery_word = choose_mystery_word()
+    if difficulty_setting == 'HARD':
+        while len(mystery_word) < 8:
+            mystery_word = choose_mystery_word()
+    # global mystery_word
+    # mystery_word = choose_mystery_word()
     # List for storing the individual letters of the mystery word
     global mystery_word_as_list
     mystery_word_as_list = list(mystery_word)
@@ -43,6 +59,8 @@ def guess_letter(letter):
     those indeces to replace the underscores in the mystery word with
     its respective letter. If the letter is not in the word, it is added
     to the letter graveyard, and the remaining guesses are decremented."""
+    if letter in letters_graveyard or letter in mystery_word_blank:
+        print("\nPlease choose a letter you have not already guessed!")
     if letter in mystery_word_as_list:
         for index, char in enumerate(mystery_word_as_list):
             if char == letter:
@@ -67,22 +85,19 @@ def prompt_guess():
     if guessed_letter in string.ascii_uppercase:
         guess_letter(guessed_letter)
     else:
-        print("Please enter one letter.")
-        print("")
+        print("Please enter one letter.\n")
 
 def initial_display():
-    print("Welcome to the mystery word game!")
-    print(' '.join(mystery_word_blank))
-    print(f"You have {guesses_remaining} guesses remaining")
     print("")
+    print(' '.join(mystery_word_blank))
+    print(f"You have {guesses_remaining} guesses remaining\n")
 
 def display():
     print("")
     print(' '.join(mystery_word_blank))
     if len(letters_graveyard) > 0:
         print(f"You have already guessed: {' '.join(letters_graveyard)}")
-    print(f"You have {guesses_remaining} guesses remaining")
-    print("")
+    print(f"You have {guesses_remaining} guesses remaining\n")
 
 def prompt_to_continue():
     print("")
@@ -95,6 +110,18 @@ def prompt_to_continue():
     else:
         print(player_input)
         print("Please respond with \'YES\' or \'NO\'")
+
+def prompt_for_difficulty():
+    difficulty_setting = ''
+    print("Please select a difficulty setting.")
+    while difficulty_setting != 'EASY' or 'NORMAL' or 'HARD':
+        difficulty_setting = input("Enter \'Easy\', \'Normal\', or \'Hard\': ").upper()
+        if difficulty_setting == 'EASY':
+            return 'EASY'
+        if difficulty_setting == 'NORMAL':
+            return 'NORMAL'
+        if difficulty_setting == 'HARD':
+            return 'HARD'
 
 def play_game():
     initialize_game()
